@@ -14,7 +14,7 @@ export function insertEmployee(data) {
   let employees = getAllEmployees();
   data['id'] = generateEmployeeId()
   employees.push(data);
-  localStorage.setItem(KEYS.employees.JSON.stringify(data));
+  localStorage.setItem(KEYS.employees, JSON.stringify(data));
 }
 
 
@@ -30,6 +30,10 @@ export function generateEmployeeId() {
 export function getAllEmployees() {
   if (localStorage.getItem(KEYS.employees) == null)
     localStorage.setItem(KEYS.employees, JSON.stringify([]));
-
-  return JSON.parse(localStorage.getItem(KEYS.employees));
+  let employees = JSON.parse(localStorage.getItem(KEYS.employees))
+  let departments = getDepartmentCollection()
+  return employees.map(x => ({
+    ...x,
+    department : departments[x.departmentId - 1].title
+  }))
 }
